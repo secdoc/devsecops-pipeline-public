@@ -73,7 +73,7 @@ See `docs/SANITIZATION.md` for the publication contract.
 - `docs/ARCHITECTURE.md`: boundaries, flows, and diagrams
 - `docs/BUILD.md`: installation and configuration
 - `docs/PIPELINE-GATES.md`: gate order, evidence, and failure behavior
-- `docs/TOOL-SELECTION.md`: tools selected, alternatives, and tradeoffs
+- `docs/TOOL-SELECTION.md`: decision tree, selected and excluded tools, activation gates, and upstream repositories
 - `docs/OPERATIONS.md`: operations, upgrades, incident handling, and rollback
 - `docs/REBUILD-DR.md`: clean rebuild and disaster recovery
 - `docs/CONTROL-MAP.md`: NIST SSDF and NIST SP 800-53 mapping
