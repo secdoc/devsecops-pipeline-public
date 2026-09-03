@@ -1,0 +1,30 @@
+name: public-reference-validation
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 6 * * 1"
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Render deterministic diagrams
+        run: |
+          python3 scripts/render_architecture.py
+          git diff --exit-code -- docs/architecture
+      - name: Validate public tree and history
+        run: python3 scripts/validate_repository.py . --history
+      - name: Run tests
+        run: python3 -m unittest discover -s tests -v
+      - name: Verify linked public SOC repository
+        run: python3 scripts/verify_linkage.py --live

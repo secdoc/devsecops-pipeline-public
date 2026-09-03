@@ -1,0 +1,63 @@
+include:
+  - local: '/.gitlab/security-toolchain.yml'
+
+stages:
+  - validate
+  - test
+  - release
+  - mirror
+
+default:
+  tags:
+    - $PUBLIC_RUNNER_TAG
+  before_script:
+    - python3 --version
+
+repository-validation:
+  stage: validate
+  script:
+    - python3 scripts/render_architecture.py
+    - git diff --exit-code -- docs/architecture
+    - python3 scripts/validate_repository.py . --history
+    - python3 scripts/verify_linkage.py
+
+unit-tests:
+  stage: test
+  script:
+    - python3 -m compileall -q scripts tests
+    - python3 -m unittest discover -s tests -v
+    - python3 scripts/evaluate_release.py --policy policies/release-policy.json --findings examples/release/findings.json --exceptions examples/release/exceptions.json
+
+live-soc-link:
+  stage: test
+  rules:
+    - if: '$LIVE_LINK_CHECK == "true"'
+    - when: never
+  script:
+    - python3 scripts/verify_linkage.py --live
+
+public-release-receipt:
+  stage: release
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_REF_PROTECTED == "true"'
+  script:
+    - test -n "$PUBLIC_RELEASE_APPROVED_BY"
+    - python3 scripts/create_public_release.py --reviewer "$PUBLIC_RELEASE_APPROVED_BY" --output artifacts/public-release.json
+  artifacts:
+    expire_in: 7 days
+    paths:
+      - artifacts/public-release.json
+
+mirror-github-main:
+  stage: mirror
+  needs:
+    - job: public-release-receipt
+      artifacts: true
+  resource_group: github-publication
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_COMMIT_REF_PROTECTED == "true" && $GITHUB_MIRROR_ENABLED == "true"'
+    - when: never
+  script:
+    - test -n "$GITHUB_MIRROR_URL"
+    - python3 scripts/validate_repository.py . --history
+    - python3 scripts/mirror_gitlab_to_github.py --source . --destination "$GITHUB_MIRROR_URL" --receipt artifacts/public-release.json --expected-oid "$CI_COMMIT_SHA"

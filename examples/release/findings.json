@@ -1,0 +1,19 @@
+{
+  "artifact_sha256": "a5ce94ef1fe604336bd6434e2b75f89e95998b85c9d705e1be35c4630aa8d32c",
+  "findings": [
+    {
+      "component": "example-lib@1.0.0",
+      "fix_available": false,
+      "known_exploited": false,
+      "scanner": "example-scanner",
+      "severity": "medium",
+      "vulnerability": "CVE-2099-0001"
+    }
+  ],
+  "scanners": {
+    "example-scanner": "1.0.0"
+  },
+  "schema_version": 1,
+  "source": "generated",
+  "synthetic": true
+}

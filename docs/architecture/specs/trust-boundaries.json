@@ -1,0 +1,147 @@
+{
+  "title": "DevSecOps Trust Boundaries",
+  "description": "Logical view separating privileged control services, hostile-by-default builds, and protected deployment authority.",
+  "columns": [
+    {
+      "title": "Control Boundary",
+      "color": "control",
+      "nodes": [
+        {
+          "id": "scm",
+          "icon": "repo",
+          "title": "Source and CI",
+          "subtitle": "protected refs"
+        },
+        {
+          "id": "artifacts",
+          "icon": "registry",
+          "title": "Artifact Services",
+          "subtitle": "write after gates"
+        },
+        {
+          "id": "secrets",
+          "icon": "key",
+          "title": "Workload Identity",
+          "subtitle": "short TTL"
+        }
+      ]
+    },
+    {
+      "title": "Hostile Build Boundary",
+      "color": "build",
+      "nodes": [
+        {
+          "id": "job",
+          "icon": "compute",
+          "title": "Contributor Job",
+          "subtitle": "no deploy identity"
+        },
+        {
+          "id": "scanners",
+          "icon": "search",
+          "title": "Security Scanners",
+          "subtitle": "independent results"
+        },
+        {
+          "id": "deps",
+          "icon": "package",
+          "title": "Approved Dependencies",
+          "subtitle": "proxied sources"
+        }
+      ]
+    },
+    {
+      "title": "Protected Deploy Boundary",
+      "color": "deploy",
+      "nodes": [
+        {
+          "id": "verifier",
+          "icon": "shield",
+          "title": "Receipt Verifier",
+          "subtitle": "digest and policy"
+        },
+        {
+          "id": "worker",
+          "icon": "compute",
+          "title": "Deploy Worker",
+          "subtitle": "protected ref only"
+        },
+        {
+          "id": "prod",
+          "icon": "server",
+          "title": "Named Target",
+          "subtitle": "least privilege"
+        }
+      ]
+    },
+    {
+      "title": "Observation Boundary",
+      "color": "security",
+      "nodes": [
+        {
+          "id": "audit",
+          "icon": "eye",
+          "title": "Audit Collection",
+          "subtitle": "all planes"
+        },
+        {
+          "id": "alert",
+          "icon": "bell",
+          "title": "Feed Silence Alert",
+          "subtitle": "fail visibility"
+        }
+      ]
+    }
+  ],
+  "flows": [
+    [
+      "scm",
+      "job",
+      "1"
+    ],
+    [
+      "job",
+      "scanners",
+      "2"
+    ],
+    [
+      "deps",
+      "job",
+      "3"
+    ],
+    [
+      "scanners",
+      "artifacts",
+      "4"
+    ],
+    [
+      "secrets",
+      "worker",
+      "5"
+    ],
+    [
+      "verifier",
+      "worker",
+      "6"
+    ],
+    [
+      "worker",
+      "prod",
+      "7"
+    ],
+    [
+      "job",
+      "audit",
+      "8"
+    ],
+    [
+      "audit",
+      "alert",
+      "9"
+    ]
+  ],
+  "schema_version": 1,
+  "classification": "public",
+  "synthetic": true,
+  "source": "generated"
+}

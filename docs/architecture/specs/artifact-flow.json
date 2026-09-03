@@ -1,0 +1,130 @@
+{
+  "title": "Immutable Artifact and Evidence Flow",
+  "description": "Build-once promotion from source revision through SBOM, scanning, policy, signature, provenance, and deployment.",
+  "columns": [
+    {
+      "title": "Source",
+      "color": "control",
+      "nodes": [
+        {
+          "id": "revision",
+          "icon": "repo",
+          "title": "Reviewed Revision",
+          "subtitle": "immutable commit"
+        }
+      ]
+    },
+    {
+      "title": "Build",
+      "color": "build",
+      "nodes": [
+        {
+          "id": "build",
+          "icon": "compute",
+          "title": "Single Build",
+          "subtitle": "reproducible input"
+        },
+        {
+          "id": "artifact",
+          "icon": "package",
+          "title": "Artifact Digest",
+          "subtitle": "SHA-256 identity"
+        }
+      ]
+    },
+    {
+      "title": "Assurance",
+      "color": "security",
+      "nodes": [
+        {
+          "id": "sbom",
+          "icon": "document",
+          "title": "CycloneDX SBOM",
+          "subtitle": "bound to digest"
+        },
+        {
+          "id": "scan",
+          "icon": "search",
+          "title": "Independent Scans",
+          "subtitle": "normalized findings"
+        },
+        {
+          "id": "decision",
+          "icon": "shield",
+          "title": "Policy Decision",
+          "subtitle": "reason codes"
+        }
+      ]
+    },
+    {
+      "title": "Release",
+      "color": "deploy",
+      "nodes": [
+        {
+          "id": "sign",
+          "icon": "key",
+          "title": "Signature and Provenance",
+          "subtitle": "approved digest"
+        },
+        {
+          "id": "receipt",
+          "icon": "document",
+          "title": "Release Receipt",
+          "subtitle": "all evidence hashes"
+        },
+        {
+          "id": "activate",
+          "icon": "server",
+          "title": "Deploy Same Digest",
+          "subtitle": "never rebuild"
+        }
+      ]
+    }
+  ],
+  "flows": [
+    [
+      "revision",
+      "build",
+      "1"
+    ],
+    [
+      "build",
+      "artifact",
+      "2"
+    ],
+    [
+      "artifact",
+      "sbom",
+      "3"
+    ],
+    [
+      "sbom",
+      "scan",
+      "4"
+    ],
+    [
+      "scan",
+      "decision",
+      "5"
+    ],
+    [
+      "decision",
+      "sign",
+      "6"
+    ],
+    [
+      "sign",
+      "receipt",
+      "7"
+    ],
+    [
+      "receipt",
+      "activate",
+      "8"
+    ]
+  ],
+  "schema_version": 1,
+  "classification": "public",
+  "synthetic": true,
+  "source": "generated"
+}

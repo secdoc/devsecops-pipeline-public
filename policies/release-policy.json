@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "block": {
+    "severities": ["critical"],
+    "known_exploited": true,
+    "fixable_severities": ["high"],
+    "missing_evidence": true,
+    "expired_exceptions": true,
+    "self_approved_exceptions": true
+  },
+  "exception_max_days": 30,
+  "required_match_fields": ["scanner", "vulnerability", "component", "artifact_sha256"]
+}

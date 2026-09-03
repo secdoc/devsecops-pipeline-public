@@ -1,0 +1,16 @@
+{
+  "bomFormat": "CycloneDX",
+  "components": [],
+  "metadata": {
+    "component": {
+      "name": "synthetic-example",
+      "type": "application",
+      "version": "1.0.0"
+    }
+  },
+  "schema_version": 1,
+  "source": "generated",
+  "specVersion": "1.5",
+  "synthetic": true,
+  "version": 1
+}

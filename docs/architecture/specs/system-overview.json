@@ -1,0 +1,142 @@
+{
+  "title": "DevSecOps System Overview",
+  "description": "Public reference showing source control, isolated build, protected deployment, security telemetry, and public mirroring.",
+  "columns": [
+    {
+      "title": "Contributors",
+      "color": "neutral",
+      "nodes": [
+        {
+          "id": "developer",
+          "icon": "user",
+          "title": "Developer",
+          "subtitle": "reviewed change"
+        }
+      ]
+    },
+    {
+      "title": "Control Plane",
+      "color": "control",
+      "nodes": [
+        {
+          "id": "gitlab",
+          "icon": "repo",
+          "title": "GitLab",
+          "subtitle": "source of truth"
+        },
+        {
+          "id": "registry",
+          "icon": "registry",
+          "title": "Registry",
+          "subtitle": "immutable artifacts"
+        },
+        {
+          "id": "policy",
+          "icon": "shield",
+          "title": "Policy and SBOM",
+          "subtitle": "evidence and approval"
+        }
+      ]
+    },
+    {
+      "title": "Build Plane",
+      "color": "build",
+      "nodes": [
+        {
+          "id": "runner",
+          "icon": "compute",
+          "title": "Untrusted Runner",
+          "subtitle": "cleanable workspace"
+        },
+        {
+          "id": "proxy",
+          "icon": "package",
+          "title": "Dependency Proxy",
+          "subtitle": "bounded egress"
+        }
+      ]
+    },
+    {
+      "title": "Deployment Plane",
+      "color": "deploy",
+      "nodes": [
+        {
+          "id": "deploy",
+          "icon": "key",
+          "title": "Protected Worker",
+          "subtitle": "short-lived identity"
+        },
+        {
+          "id": "target",
+          "icon": "server",
+          "title": "Application Target",
+          "subtitle": "exact endpoint"
+        }
+      ]
+    },
+    {
+      "title": "External and Security",
+      "color": "security",
+      "nodes": [
+        {
+          "id": "github",
+          "icon": "cloud",
+          "title": "GitHub Public",
+          "subtitle": "one-way mirror"
+        },
+        {
+          "id": "siem",
+          "icon": "eye",
+          "title": "Security Monitoring",
+          "subtitle": "audit and deny telemetry"
+        }
+      ]
+    }
+  ],
+  "flows": [
+    [
+      "developer",
+      "gitlab",
+      "1"
+    ],
+    [
+      "gitlab",
+      "runner",
+      "2"
+    ],
+    [
+      "runner",
+      "proxy",
+      "3"
+    ],
+    [
+      "runner",
+      "registry",
+      "4"
+    ],
+    [
+      "policy",
+      "deploy",
+      "5"
+    ],
+    [
+      "deploy",
+      "target",
+      "6"
+    ],
+    [
+      "gitlab",
+      "github",
+      "7"
+    ],
+    [
+      "runner",
+      "siem",
+      "8"
+    ]
+  ],
+  "schema_version": 1,
+  "classification": "public",
+  "synthetic": true,
+  "source": "generated"
+}

@@ -1,0 +1,130 @@
+{
+  "title": "Backup and Isolated Recovery Flow",
+  "description": "Recovery view for control data, artifact storage, policies, identities, and clean worker rebuilds.",
+  "columns": [
+    {
+      "title": "Protected Sources",
+      "color": "control",
+      "nodes": [
+        {
+          "id": "gitdata",
+          "icon": "repo",
+          "title": "GitLab State",
+          "subtitle": "repositories and DB"
+        },
+        {
+          "id": "artifactdata",
+          "icon": "registry",
+          "title": "Registry and Packages",
+          "subtitle": "immutable data"
+        },
+        {
+          "id": "trustdata",
+          "icon": "key",
+          "title": "Config and Trust",
+          "subtitle": "decryption material"
+        }
+      ]
+    },
+    {
+      "title": "Backup Boundary",
+      "color": "security",
+      "nodes": [
+        {
+          "id": "backup",
+          "icon": "storage",
+          "title": "Encrypted Backup",
+          "subtitle": "runner access denied"
+        },
+        {
+          "id": "verify",
+          "icon": "shield",
+          "title": "Backup Verification",
+          "subtitle": "integrity and age"
+        }
+      ]
+    },
+    {
+      "title": "Isolated Restore",
+      "color": "build",
+      "nodes": [
+        {
+          "id": "restore",
+          "icon": "server",
+          "title": "Recovery Environment",
+          "subtitle": "network isolated"
+        },
+        {
+          "id": "workers",
+          "icon": "compute",
+          "title": "Rebuilt Workers",
+          "subtitle": "new identities"
+        }
+      ]
+    },
+    {
+      "title": "Acceptance",
+      "color": "deploy",
+      "nodes": [
+        {
+          "id": "canary",
+          "icon": "search",
+          "title": "Functional Canary",
+          "subtitle": "build and rejection tests"
+        },
+        {
+          "id": "resume",
+          "icon": "check",
+          "title": "Controlled Resume",
+          "subtitle": "RTO and RPO recorded"
+        }
+      ]
+    }
+  ],
+  "flows": [
+    [
+      "gitdata",
+      "backup",
+      "1"
+    ],
+    [
+      "artifactdata",
+      "backup",
+      "2"
+    ],
+    [
+      "trustdata",
+      "backup",
+      "3"
+    ],
+    [
+      "backup",
+      "verify",
+      "4"
+    ],
+    [
+      "verify",
+      "restore",
+      "5"
+    ],
+    [
+      "restore",
+      "workers",
+      "6"
+    ],
+    [
+      "workers",
+      "canary",
+      "7"
+    ],
+    [
+      "canary",
+      "resume",
+      "8"
+    ]
+  ],
+  "schema_version": 1,
+  "classification": "public",
+  "synthetic": true,
+  "source": "generated"
+}

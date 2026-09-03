@@ -1,0 +1,20 @@
+security-toolchain:
+  stage: test
+  rules:
+    - if: '$SECURITY_TOOLCHAIN_READY == "true"'
+    - when: never
+  script:
+    - command -v gitleaks trivy semgrep checkov syft clamscan
+    - test -n "$SEMGREP_RULESET"
+    - mkdir -p artifacts
+    - gitleaks git --redact --exit-code 1 .
+    - trivy fs --scanners vuln,secret,misconfig --exit-code 1 --severity HIGH,CRITICAL .
+    - semgrep scan --error --config "$SEMGREP_RULESET" .
+    - checkov -d . --hard-fail-on HIGH --quiet
+    - syft dir:. -o cyclonedx-json=artifacts/repository.cdx.json
+    - clamscan --recursive --infected --no-summary .
+  artifacts:
+    when: always
+    expire_in: 7 days
+    paths:
+      - artifacts/repository.cdx.json

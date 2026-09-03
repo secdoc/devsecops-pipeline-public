@@ -1,0 +1,8 @@
+# Public-release controls require explicit owner review.
+* @secdoc
+/docs/architecture/ @secdoc
+/policies/ @secdoc
+/scripts/validate_repository.py @secdoc
+/scripts/mirror_gitlab_to_github.py @secdoc
+/.gitlab-ci.yml @secdoc
+/.github/workflows/ @secdoc
