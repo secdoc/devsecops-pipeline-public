@@ -1,10 +1,35 @@
+trufflehog-source:
+  stage: validate
+  rules:
+    - if: '$SECURITY_TOOLCHAIN_READY == "true"'
+    - when: never
+  variables:
+    GIT_DEPTH: "0"
+  script:
+    - set -euo pipefail
+    - command -v trufflehog
+    - test -n "$TRUFFLEHOG_VERSION"
+    - mkdir -p artifacts
+    - raw=$(mktemp); chmod 0600 "$raw"; trap 'rm -f "$raw"' EXIT
+    - set +e
+    - trufflehog --json --no-verification --no-update --fail --fail-on-scan-errors git "file://$CI_PROJECT_DIR" > "$raw"
+    - scan_status=$?
+    - set -e
+    - python3 scripts/trufflehog_report.py --input "$raw" --output artifacts/trufflehog-source.json --scope git-history --scanner-exit-code "$scan_status" --scanner-version "$TRUFFLEHOG_VERSION" --source-commit "$CI_COMMIT_SHA"
+    - exit "$scan_status"
+  artifacts:
+    when: always
+    expire_in: 7 days
+    paths:
+      - artifacts/trufflehog-source.json
+
 security-toolchain:
   stage: test
   rules:
     - if: '$SECURITY_TOOLCHAIN_READY == "true"'
     - when: never
   script:
-    - command -v gitleaks trivy semgrep checkov syft clamscan
+    - command -v gitleaks trufflehog trivy semgrep checkov syft clamscan
     - test -n "$SEMGREP_RULESET"
     - mkdir -p artifacts
     - gitleaks git --redact --exit-code 1 .
@@ -18,3 +43,28 @@ security-toolchain:
     expire_in: 7 days
     paths:
       - artifacts/repository.cdx.json
+
+trufflehog-snapshot:
+  stage: test
+  rules:
+    - if: '$SECURITY_TOOLCHAIN_READY == "true"'
+    - when: never
+  script:
+    - set -euo pipefail
+    - command -v trufflehog
+    - test -n "$TRUFFLEHOG_VERSION"
+    - mkdir -p artifacts
+    - snapshot=$(mktemp); raw=$(mktemp); chmod 0600 "$snapshot" "$raw"; trap 'rm -f "$snapshot" "$raw"' EXIT
+    - git archive --format=tar "$CI_COMMIT_SHA" > "$snapshot"
+    - snapshot_sha256=$(sha256sum "$snapshot" | cut -d ' ' -f1)
+    - set +e
+    - trufflehog --json --no-verification --no-update --fail --fail-on-scan-errors filesystem "$snapshot" > "$raw"
+    - scan_status=$?
+    - set -e
+    - python3 scripts/trufflehog_report.py --input "$raw" --output artifacts/trufflehog-snapshot.json --scope repository-snapshot --scanner-exit-code "$scan_status" --scanner-version "$TRUFFLEHOG_VERSION" --artifact-sha256 "$snapshot_sha256"
+    - exit "$scan_status"
+  artifacts:
+    when: always
+    expire_in: 7 days
+    paths:
+      - artifacts/trufflehog-snapshot.json
