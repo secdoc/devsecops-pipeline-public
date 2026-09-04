@@ -11,7 +11,7 @@ This mapping uses NIST SP 800-218 SSDF v1.1 as the software-delivery backbone an
 | SSDF PS.2 | digest, signature, SBOM, and provenance verification | release receipt | trust-root compromise remains material |
 | SSDF PW.4 | approved proxies and dependency analysis | proxy logs and SBOM | upstream compromise remains possible |
 | SSDF PW.6 | pinned builds and cleanable workers | runner configuration and cleanup test | some ecosystems need exceptions |
-| SSDF PW.7 | review, SAST, secret detection, and IaC checks | pipeline evidence | false positives need ownership |
+| SSDF PW.7 | review, SAST, Gitleaks, Trivy, multi-stage TruffleHog secret detection, and IaC checks | source-revision and snapshot-digest-bound sanitized pipeline evidence | false positives and legacy history need ownership |
 | SSDF PW.8 | unit, integration, and negative tests | test reports | testing cannot prove absence of defects |
 | SSDF RV.1 and RV.2 | independent scans and risk-based policy | findings and decision receipt | data freshness affects decisions |
 | AC-6 | separate identities and exact target access | authorization tests | mis-scoped identity can bypass network controls |

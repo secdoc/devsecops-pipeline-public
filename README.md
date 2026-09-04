@@ -22,7 +22,7 @@ No private SOC configuration or operational evidence is imported.
 - Tool-selection record and accepted tradeoffs.
 - GitLab and GitHub validation workflows.
 - Risk-based release policy with expiring exception rules.
-- Repository sanitization and secret-scanning gate.
+- Repository sanitization plus Gitleaks, Trivy, and multi-stage TruffleHog secret-scanning gates.
 - Immutable artifact receipt generator.
 - Fail-closed GitLab-to-GitHub mirror helper.
 - Tests that exercise policy, sanitization, receipt, diagram, and linkage behavior.
@@ -79,6 +79,7 @@ See `docs/SANITIZATION.md` for the publication contract.
 - `docs/CONTROL-MAP.md`: NIST SSDF and NIST SP 800-53 mapping
 - `docs/THREAT-MODEL.md`: threats, controls, residual risk, and abuse cases
 - `docs/SANITIZATION.md`: public-release rules and automated checks
+- `scripts/trufflehog_report.py`: allowlisted TruffleHog evidence generator that excludes candidate secret material
 - `docs/adr/`: architecture decisions
 
 ## Status and limitations

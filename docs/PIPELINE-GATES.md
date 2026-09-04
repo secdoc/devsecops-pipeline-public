@@ -7,7 +7,7 @@
 | Repository integrity | required governance files or links are missing | validation report |
 | Public sanitization | sensitive indicators or malformed public artifacts are found | path, rule ID, reason only |
 | Unit and integration tests | tests fail or expected negative behavior is absent | test report |
-| Secret detection | credential or private-key patterns are found | scanner report with value redacted |
+| Secret detection | Gitleaks, Trivy, or TruffleHog finds a credential or private-key pattern in history, introduced content, or an immutable snapshot | allowlisted report with no candidate value, plus source revision or snapshot digest |
 | SAST and IaC | policy-defined blocking findings exist | normalized finding inventory |
 | Dependency and image analysis | critical, KEV, or fixable high findings violate policy | scanner versions, database age, finding IDs |
 | SBOM | SBOM is missing, malformed, or not bound to artifact digest | SBOM hash and artifact hash |
@@ -28,6 +28,8 @@
 ## Failure behavior
 
 A failed gate does not advance delivered state, publish an artifact, deploy, or mirror. Retries operate on the same immutable input. A human exception cannot replace missing evidence or bypass digest mismatch.
+
+TruffleHog provider verification is disabled in the untrusted pipeline. The control must fail closed on findings, malformed JSON, scanner errors, or an inconsistent exit code. Only the sanitized summary is retained. Raw scanner output is temporary and must not enter artifacts, logs, telemetry, or release receipts.
 
 ## Receipt contract
 

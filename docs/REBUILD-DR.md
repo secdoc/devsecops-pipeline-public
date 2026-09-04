@@ -6,6 +6,7 @@
 - protected application secrets required to decrypt restored data
 - runner definitions and rebuild automation, without reusable job credentials
 - policy, exception, signing, and trust-root records
+- pinned scanner versions and delivery records, including the TruffleHog binary or OCI digest and sanitizer script
 - DNS, PKI, identity, telemetry, and network contracts
 - repository-scoped GitHub mirror key registration records, not plaintext private keys in documentation
 
@@ -18,7 +19,7 @@
 5. Restore dependency services and verify package and vulnerability database freshness.
 6. Rebuild build workers from code. Register new project-scoped identities and rerun positive and negative reachability tests.
 7. Rebuild protected deployment workers separately. Reissue short-lived trust and verify exact targets.
-8. Run a noncritical pipeline through test, SBOM, scan, policy, signature, provenance, and deployment rejection tests.
+8. Run a noncritical pipeline through tests, Git-history and immutable-snapshot TruffleHog gates, SBOM, scan, policy, signature, provenance, and deployment rejection tests. Verify only sanitized TruffleHog summaries are retained.
 9. Restore the public mirror identity. Verify the GitHub destination has not diverged before resuming.
 10. Run a complete isolated restore exercise and record RTO, RPO, gaps, and rollback evidence.
 

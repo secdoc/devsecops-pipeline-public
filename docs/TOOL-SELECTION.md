@@ -56,11 +56,12 @@ These controls run without the external scanner stack and validate the public re
 
 ### Optional security-toolchain adapter
 
-The adapter runs all listed commands as one required job when enabled. It fails if a command or approved Semgrep ruleset is missing.
+The adapter runs required security jobs when enabled. It fails if a command, approved Semgrep ruleset, or required scanner version declaration is missing. TruffleHog is separated into history and immutable-snapshot jobs so each boundary produces independently attributable evidence.
 
 | Control | Tool | Why included | Known overlap or limitation |
 |---|---|---|---|
 | Full-history secret detection | [Gitleaks](https://github.com/gitleaks/gitleaks) | Purpose-built Git history scanning and redacted findings. | Trivy also detects secrets, but Gitleaks retains independent history-focused coverage. |
+| History and immutable-snapshot secret detection | [TruffleHog](https://github.com/trufflesecurity/trufflehog) | Adds detector diversity at two lifecycle boundaries and binds sanitized evidence to the source revision or snapshot digest. | Provider verification is disabled in untrusted CI; legacy findings need controlled baseline triage, and raw JSON must never be retained. |
 | Vulnerability, secret, and misconfiguration scan | [Trivy](https://github.com/aquasecurity/trivy) | One self-hostable CLI covers repositories, dependencies, configuration, and container-oriented inputs. | Broad coverage needs policy tuning and current vulnerability data. |
 | Static application security testing | [Semgrep Community Edition](https://github.com/semgrep/semgrep) | Supports many languages and reviewable custom rules without requiring the source authority to move to another platform. | Community rules require ownership, pinning, and false-positive management. |
 | Infrastructure-as-code analysis | [Checkov](https://github.com/bridgecrewio/checkov) | Broad IaC policy coverage and deterministic CLI execution. | Overlaps Trivy misconfiguration checks; retain only rules that produce distinct evidence. |

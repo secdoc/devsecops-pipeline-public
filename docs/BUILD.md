@@ -44,7 +44,9 @@ Copy `.gitlab-ci.yml` into the authoritative GitLab project. Assign jobs to isol
 
 Do not store a broad GitHub personal access token on a general build runner.
 
-The local `.gitlab/security-toolchain.yml` adapter adds full-history Gitleaks, Trivy filesystem scanning, Semgrep, Checkov, Syft CycloneDX generation, and ClamAV. Set `SECURITY_TOOLCHAIN_READY=true` only on a runner where every command and an approved `SEMGREP_RULESET` are available. The job fails if any command is absent. Keep the variable unset rather than pretending unavailable tools passed, and make the job required before production adoption.
+The local `.gitlab/security-toolchain.yml` adapter adds full-history Gitleaks, Trivy filesystem scanning, Semgrep, Checkov, Syft CycloneDX generation, ClamAV, and TruffleHog scans of Git history and the immutable repository snapshot. Set `SECURITY_TOOLCHAIN_READY=true` only on a runner where every command and an approved `SEMGREP_RULESET` are available. Set `TRUFFLEHOG_VERSION` to the exact reviewed scanner version and pin the installed binary, package, or OCI image in local runner automation. The jobs fail if a command, version declaration, or required input is absent. Keep the variables unset rather than pretending unavailable tools passed, and make the jobs required before production adoption.
+
+TruffleHog runs with provider verification disabled. Raw JSONL exists only in a mode-0600 temporary file and is removed by an exit trap. `scripts/trufflehog_report.py` retains only detector identity, verification state, file, line, commit, scope, scanner version, digest binding, and counts. Never retain TruffleHog `Raw`, `RawV2`, `SecretParts`, `ExtraData`, or candidate values as CI artifacts or logs.
 
 ## Linked SOC project
 
